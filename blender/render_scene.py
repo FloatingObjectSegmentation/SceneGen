@@ -53,17 +53,16 @@ def genscene(X,y):
             
 for i in range(1,2):
     runalg(i)
-    
-# create and save scan
-    #savefile = scene_savefolder + "Scan" + str(i) + ".pcd"
-    #print(savefile)
-    #blensor.blendodyne.scan_advanced(scanner, rotation_speed = 10.0, 
-     #                           simulation_fps=24, angle_resolution = 0.1728, 
-     #                           max_distance = 120, evd_file= savefile,
-     #                           noise_mu=0.0, noise_sigma=0.3, start_angle = 0.0, 
-     #                           end_angle = 360.0, evd_last_scan=True, 
-     #                           add_blender_mesh = False, 
-      #                          add_noisy_blender_mesh = False,
-      #                          frame_time = (1.0 / 24.0),
-      #                          simulation_time = 100.0,
-      #                          world_transformation=scanner.matrix_world) 
+    savefile = scene_savefolder + "/Scan" + str(i) + ".pcd"
+    print(savefile)
+    blensor.blendodyne.scan_advanced(scanner, rotation_speed = 10.0, 
+                               simulation_fps=24, angle_resolution = 0.1728, 
+                               max_distance = 120, evd_file= savefile,
+                               noise_mu=0.0, noise_sigma=0.3, start_angle = 0.0, 
+                               end_angle = 360.0, evd_last_scan=True, 
+                               add_blender_mesh = False, 
+                               add_noisy_blender_mesh = False,
+                               frame_time = (1.0 / 24.0),
+                               simulation_time = 100.0,
+                               world_transformation=scanner.matrix_world)
+    deleteobjects()
