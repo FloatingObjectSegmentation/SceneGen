@@ -1,0 +1,14 @@
+function matrix = createRandom3DPointMatrixBounded(numPoints, xmin, xmax, ymin, ymax, zmin, zmax)
+%CREATERANDOM3DPOINTMATRIXBOUNDED Summary of this function goes here
+%   Detailed explanation goes here
+
+% drone locations
+droneLocs = horzcat(ones(numPoints, 1) * (droneMaxX - droneMinX), ...
+                    ones(numPoint, 1) * (droneMaxY - droneMinY), ...
+                    ones(numDrones, 1) * (droneMaxZ - droneMinZ));
+droneLocs = round(rand(numDrones, 3) .* droneLocs);
+droneLocs = droneLocs + horzcat(ones(numDrones, 1) * (droneMinX), ...
+                                ones(numDrones, 1) * (droneMinY), ...
+                                ones(numDrones, 1) * (droneMinZ));
+end
+
