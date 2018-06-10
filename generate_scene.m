@@ -21,12 +21,19 @@ minOther = 5;
 maxOther = 10;
 
 % location, orientation boundary
-droneMinX = -10;
-droneMaxX = 10;
-droneMinY = -10;
-droneMaxY = 10;
+droneMinX = -100;
+droneMaxX = 100;
+droneMinY = -100;
+droneMaxY = 100;
 droneMinZ = 0;
-droneMaxZ = 5;
+droneMaxZ = 50;
+
+treeMinX = droneMinX;
+treeMaxX = droneMaxX;
+treeMinY = droneMinY;
+treeMaxY = droneMaxY;
+treeMinZ = -15;
+treeMaxZ = -15;
 
 otherMinX = droneMinX;
 otherMaxX = droneMaxX;
@@ -34,6 +41,13 @@ otherMinY = droneMinY;
 otherMaxY = droneMaxY;
 otherMinZ = 0;
 otherMaxZ = 0;
+
+% radius of each object (in Blender world space)
+droneRadius = 3;
+treeRadius = 30; % must be centered at base + (0,0,30) => this is the center of the tree
+otherRadius = 8;
+
+
 %% code
 
 % generate how many of each
@@ -47,9 +61,9 @@ droneLocs = createRandom3DPointMatrixBounded(numDrones,...
                 droneMinY, droneMaxY,...
                 droneMinZ, droneMaxZ);
 treeLocs = createRandom3DPointMatrixBounded(numTrees,...
-                otherMinX, otherMaxX,...
-                otherMinY, otherMaxY,...
-                otherMinZ, otherMaxZ);   
+                treeMinX, treeMaxX,...
+                treeMinY, treeMaxY,...
+                treeMinZ, treeMaxZ);   
 otherLocs = createRandom3DPointMatrixBounded(numOther,...
                 otherMinX, otherMaxX,...
                 otherMinY, otherMaxY,...
@@ -60,3 +74,28 @@ droneOrientations = createRandom3DPointMatrixBounded(numDrones,...
                         0, 0,...
                         0, 0,...
                         0, 360);
+
+ 
+% resample the world space for objects that are overlapping other objects
+classes = vertcat(ones(numDrones, 1), ones(numTrees, 1) * 2, ones(numOther, 1) * 3);
+data = vertcat(droneLocs, treeLocs, otherLocs);
+radii = [droneRadius, treeRadius, otherRadius];
+
+for i = 1:1:size(data, 1)
+    while true
+        KdTree = createns(data, 'Distance', 'euclidean');
+        Cluster = rangesearch(KdTree, data(i, :), radii(classes(i)));
+        if max(size(Cluster{1})) == 1
+            break
+        end
+        % resample
+        if classes(i) == 1
+            data(i,:) = resample(droneMinX, droneMaxX, droneMinY, droneMaxY, droneMinZ, droneMaxZ);
+        elseif classes(i) == 2
+            data(i,:) = resample(treeMinX, treeMaxX, treeMinY, treeMaxY, treeMinZ, treeMaxZ);
+        else
+            data(i,:) = resample(otherMinX, otherMaxX, otherMinY, otherMaxY, otherMinZ, otherMaxZ);
+        end
+    end
+end
+                    
