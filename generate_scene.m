@@ -76,7 +76,7 @@ droneOrientations = createRandom3DPointMatrixBounded(numDrones,...
                         0, 360);
 
  
-% resample the world space for objects that are overlapping other objects
+%% resample the world space for objects that are overlapping other objects
 classes = vertcat(ones(numDrones, 1), ones(numTrees, 1) * 2, ones(numOther, 1) * 3);
 data = vertcat(droneLocs, treeLocs, otherLocs);
 radii = [droneRadius, treeRadius, otherRadius];
