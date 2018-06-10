@@ -15,8 +15,8 @@
 % how many
 minDrones = 1;
 maxDrones = 3;
-minTrees = 5;
-maxTrees = 10;
+minTrees = 3;
+maxTrees = 5;
 minOther = 5;
 maxOther = 10;
 
@@ -95,7 +95,7 @@ for i = 1:1:size(data, 1)
         if classes(i) == 1
             data(i,:) = resample(droneMinX, droneMaxX, droneMinY, droneMaxY, droneMinZ, droneMaxZ);
         elseif classes(i) == 2
-            data(i,:) = resample(treeMinX, treeMaxX, treeMinY, treeMaxY, treeMinZ, treeMaxZ);
+            data(i,:) = resample(treeMinX, treeMaxX, treeMinY, treeMaxY, treeMinZ + 30, treeMaxZ + 30);
         else
             data(i,:) = resample(otherMinX, otherMaxX, otherMinY, otherMaxY, otherMinZ, otherMaxZ);
         end
