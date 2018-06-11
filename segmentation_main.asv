@@ -3,7 +3,7 @@ datafolder = 'scans/scans/Scan';
 datasuffix = '00000.pcd';
 
 %% Get all the drones from the scenes and turn them into descriptors
-dronedescriptors = cell(50, 1);
+dronedescriptors = cell(50);
 currcell = 1;
 for scene = 1:1:20
     
@@ -29,50 +29,15 @@ for scene = 1:1:20
             
         droneCentroid = mean(dronePts);
         
-        % continue if the cluster is too far away (it's not the drone!)
-        if norm(droneCentroid - centroid) > 5
-            continue;
-        end
+        % continue if the cluster 
         
         droneBoundingBox = max(dronePts) - min(dronePts) + [1, 1, 1];
         plotcube(droneBoundingBox, droneCentroid - droneBoundingBox/2, .3, [1 0 1]);
         % compute the descriptor
         sigma = norm(droneCentroid) * 0.001;
-        template = points_to_gaussian_field(dronePts, droneCentroid - droneBoundingBox / 2, droneBoundingBox, 30, sigma);
+        %template = points_to_gaussian_field(dronePts, droneCentroid - droneBoundingBox / 2, droneBoundingBox, 30, sigma);
         
-        dronedescriptors{currcell} = template;
+        %dronedescriptors{currcell} = template;
         currcell = currcell + 1;
     end
 end
-
-%% Compare them by bhattacharya similarity
-bhattacharya = zeros(currcell, currcell);
-for i = 1:1:currcell
-    for j = 1:1:currcell
-        if i == j || j > i
-            continue;
-        end
-        sim = bhattacharya_matching(dronedescriptors{i}, dronedescriptors{j});
-        
-        bhattacharya(i,j) = sim;
-        j
-    end
-end
-max(max(real(bhattacharya)), max(real(bhattacharya')))
-
-%% Compare them by cross-correlation
-correlation_matrix = zeros(currcell, currcell);
-for i = 1:1:currcell
-    for j = 1:1:currcell
-        if i == j || j > i
-            continue;
-        end
-        [ssd, ncc] = template_matching(dronedescriptors{i}, dronedescriptors{j});
-        [v,loc] = max(ncc(:));
-        [ii,jj,k] = ind2sub(size(ncc),loc);
-        
-        correlation_matrix(i,j) = v;
-        j
-    end
-end
-max(max(real(correlation_matrix)), max(real(correlation_matrix')))
