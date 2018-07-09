@@ -84,8 +84,9 @@ radii = [droneRadius, treeRadius, otherRadius];
 % trees have local space origin at the roots, it should be in the center
 data(classes == 2, :) = data(classes == 2, :) + repmat([0, 0, 30], sum(classes == 2), 1);
 
+fail = 0;
 for i = 1:1:size(data, 1)
-    while true
+    for j = 1:1:10000
         KdTree = createns(data, 'Distance', 'euclidean');
         Cluster = rangesearch(KdTree, data(i, :), radii(classes(i)));
         if max(size(Cluster{1})) == 1
@@ -98,6 +99,9 @@ for i = 1:1:size(data, 1)
             data(i,:) = resample(treeMinX, treeMaxX, treeMinY, treeMaxY, treeMinZ + 30, treeMaxZ + 30);
         else
             data(i,:) = resample(otherMinX, otherMaxX, otherMinY, otherMaxY, otherMinZ, otherMaxZ);
+        end
+        if j == 9999
+            fail = 1;
         end
     end
 end

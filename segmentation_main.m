@@ -8,7 +8,7 @@ currcell = 1;
 for scene = 1:1:20
     
     % get current scene, ground truths
-    ptCloud = pcread(join([datafolder, string(scene), datasuffix], ''));
+    ptCloud = pcread('testdata/neuronal_training_set/Scan12290045774300000.pcd');
     X = getfield(load(join(["data/", string(scene), "data.mat"], '')), 'data');
     y = getfield(load(join(["data/", string(scene), "classes.mat"], '')), 'classes');
     ClusterIndices = RBNN(ptCloud.Location, 4.0, 5);
